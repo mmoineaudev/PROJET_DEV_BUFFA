@@ -124,16 +124,22 @@ function init() {
                 let cuisine = this.restaurants[this.indexToModify].cuisine;                // Pour éviter que la page ne se ré-affiche
                 document.getElementsByName("idToModify")[0].innerHTML = id;
                 
+                /*
                 let form = document.getElementsByName("formulaireAjout");
                 let donneesFormulaire = new FormData(form);
+                */
                 
-                console.log("modifyRestaurant [ _id " + form._id.value + " name " + form.name.value + " cuisine " + form.cuisine.value);
+                console.log("modifyRestaurant [ \n_id " + id + " \nname " + name + " \n cuisine " + cuisine);
 
-                let url = "http://127.0.0.1:8080/api/restaurants";
+                let url = "http://127.0.0.1:8080/api/restaurants/"+id;
 
                 fetch(url, {
                     method: "PUT",
-                    body: donneesFormulaire
+                    body: {
+                        _id:id,
+                        name:name,
+                        cuisine:cuisine
+                    }
                 })
                     .then((responseJSON) => {
                         responseJSON.json()
