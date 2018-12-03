@@ -169,13 +169,11 @@ function init() {
                 console.log("modifyRestaurant [ \n_id " + id + " \nname " + name + " \n cuisine " + cuisine);
 
                 let url = "http://127.0.0.1:8080/api/restaurants/" + id;
-
+                let formData = new FormData(document.getElementsByName("formulaireModif")[0]);//why not
                 fetch(url, {
                     method: "PUT",
                     body: {
-                        _id: id,
-                        name: name,
-                        cuisine: cuisine
+                       formData
                     }
                 })
                     .then((responseJSON) => {
