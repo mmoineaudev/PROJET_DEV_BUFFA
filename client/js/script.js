@@ -94,21 +94,40 @@ function init() {
 
 
             },
-            ajouterRestaurant(event) {
+            getName(restaurants) {
+                return restaurants.name;
+            },
+            getId(restaurants) {
+                console.log("getId(" + restaurants._id + ")");
+                return restaurants.restaurant_id;
+            },
+            afficherModifierRestaurant(index) {
+                console.log("afficherModifierRestaurant " + index);
+                this.indexToModify = index;
+                this.fillDataToModify();
+                document.getElementById("tohide").setAttribute('style', 'display:block;');
+            },
+            fillDataToModify() {
+                console.log("fillDataToModify " + this.indexToModify);
+                console.log(this.restaurants[this.indexToModify]);
+                var id = this.getId(this.restaurants[this.indexToModify]);
+                console.log("fillDataToModify" + id);
+                document.getElementsByName("idToModify")[0].innerHTML = id;
+
+                var name = this.restaurants[this.indexToModify].name;
+                var cuisine = this.restaurants[this.indexToModify].cuisine;
+
+                this.nametomodify = name;
+                this.cuisinetomodify = cuisine;
+            },
+            ajouterRestaurant(event) {//why does this work and not put ?
                 // Pour éviter que la page ne se ré-affiche
                 event.preventDefault();
-
-                let form = document.getElementsByName("formulaireAjout");
-
+                let form = document.getElementsByName("formulaireAjout")[0];
                 // Récupération des valeurs des champs du formulaire
                 // en prévision d'un envoi multipart en ajax/fetch
                 let donneesFormulaire = new FormData(form);
-                console.log(donneesFormulaire);
-
-
-
                 let url = "http://127.0.0.1:8080/api/restaurants";
-
                 fetch(url, {
                     method: "POST",
                     body: donneesFormulaire
@@ -126,56 +145,20 @@ function init() {
                         console.log(err);
                     });
             },
-            getName(restaurants) {
-                return restaurants.name;
-            },
-            getId(restaurants) {
-                console.log("getId(" + restaurants + ")");
-                return restaurants.restaurant_id;
-            },
-            afficherModifierRestaurant(index) {
-                console.log("afficherModifierRestaurant " + index);
-                this.fillDataToModify(index);
-                document.getElementById("tohide").setAttribute('style', 'display:block;');
-            },
-            fillDataToModify(index) {
-                console.log("fillDataToModify " + index);
-                console.log(this.restaurants[index]);
-                var id = this.getId(this.restaurants[index]);
-                console.log("fillDataToModify" + id);
-                document.getElementsByName("idToModify")[0].innerHTML = id;
-
-                var name = this.restaurants[index].name;
-                var cuisine = this.restaurants[index].cuisine;
-
-                this.nametomodify = name;
-                this.cuisinetomodify = cuisine;
-            },
             modifyRestaurant() {
                 // Pour éviter que la page ne se ré-affiche
                 event.preventDefault();
                 console.log("modifyRestaurant" + this.indexToModify);
-                let id = this.getId(this.restaurants[this.indexToModify]);
-                let name = this.restaurants[this.indexToModify].name;
-                let cuisine = this.restaurants[this.indexToModify].cuisine;                // Pour éviter que la page ne se ré-affiche
-                document.getElementsByName("idToModify")[0].innerHTML = id;
+            
+               let form = document.getElementsByName("formulaireModif")[0];
+               let formData = new FormData(form);
 
-                /*
-                let form = document.getElementsByName("formulaireAjout");
-                let donneesFormulaire = new FormData(form);
-                */
+                console.log("modifyRestaurant [ \n_id " + this.restaurants[this.indexToModify]._id + " \nname " + this.nametomodify + " \n cuisine " + this.cuisinetomodify);
 
-                console.log("modifyRestaurant [ \n_id " + id + " \nname " + name + " \n cuisine " + cuisine);
-
-                let url = "http://127.0.0.1:8080/api/restaurants/" + id;
-
+                let url = "http://127.0.0.1:8080/api/restaurants/" + this.restaurants[this.indexToModify]._id;
                 fetch(url, {
                     method: "PUT",
-                    body: {
-                        _id: id,
-                        name: name,
-                        cuisine: cuisine
-                    }
+                    body: formData
                 })
                     .then((responseJSON) => {
                         responseJSON.json()
