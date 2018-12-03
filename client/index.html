@@ -19,17 +19,33 @@
         <h1>Les restaurants :</h1>
         <hr>
         Rechercher : <input type="text" v-model="name" v-on:keyup="getRestaurantsFromServeur">
-        <hr>        
-        <ul>
-            <li v-for="r,
-            index in restaurants">
-                {{r.name}} cuisine {{r.cuisine}}
-                <button v-on:click="supprimerRestaurant(index)">supprimer</button>
-                <button v-on:click="afficherModifierRestaurant(index)">modifier</button>
-            </li>
-        </ul>
-        <button v-on:click="pageNext()"> next </button>
-        <button v-on:click="pagePrev()"> previous </button>
+        <hr>
+        <table>
+
+            <thead>
+                <th>Nom</th>
+                <th>Cuisine</th>
+                <th>supprimer</th>
+                <th>modifier</th>
+            </thead>
+            <tr v-for="r, index in restaurants">
+
+                <td>{{r.name}}</td>
+                <td> {{r.cuisine}} </td>
+                <td><button v-on:click="supprimerRestaurant(index)">supprimer</button></td>
+                <td><button v-on:click="afficherModifierRestaurant(index)">modifier</button></td>
+
+            </tr>
+            <tfoot>
+                
+                <td><button :disabled="page-1<1" v-on:click="pagePrev()"> page {{page-1}} </button></td>
+                <td>{{page}}</td>
+                <td></td>
+                <td><button v-on:click="pageNext()"> page {{page+1}} </button></td>
+            </tfoot>
+        </table>
+        
+        
 
         <span><input type="range" min="0" max="35" v-model="nbPerPage" v-on:change="getRestaurantsFromServeur">Pagination
             {{nbPerPage}}</span>
@@ -42,7 +58,7 @@
         </form>
         <hr>
         <div id="tohide" style="display:none;">
-            <form name="formulaireModif" >
+            <form name="formulaireModif">
                 <h3>formulaireModif</h3>
                 ID : <span name="idToModify">empty</span>
                 Nom : <input type="text" v-model="nametomodify">
