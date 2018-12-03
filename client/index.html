@@ -9,6 +9,10 @@
     <script src="js/script.js"></script>
     <link rel="stylesheet" href="css/styles.css">
     <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+    <script src="semantic/dist/semantic.min.js"></script>
 
     <title>Gestionnaire restaurants VueJS</title>
 </head>
@@ -20,7 +24,7 @@
         <hr>
         Rechercher : <input type="text" v-model="name" v-on:keyup="getRestaurantsFromServeur">
         <hr>
-        <table>
+        <table class="ui compact celled definition table">
 
             <thead>
                 <th>Nom</th>
@@ -30,31 +34,36 @@
             </thead>
             <tr v-for="r, index in restaurants">
 
-                <td>{{r.name}}</td>
-                <td> {{r.cuisine}} </td>
-                <td><button v-on:click="supprimerRestaurant(index)">supprimer</button></td>
-                <td><button v-on:click="afficherModifierRestaurant(index)">modifier</button></td>
+                <td class="collapsing">{{r.name}}</td>
+                <td class="collapsing"> {{r.cuisine}} </td>
+                <td class="collapsing"><button class="ui small button" v-on:click="supprimerRestaurant(index)">supprimer</button></td>
+                <td class="collapsing"><button class="ui small button" v-on:click="afficherModifierRestaurant(index)">modifier</button></td>
 
             </tr>
-            <tfoot>
-                
-                <td><button :disabled="page-1<1" v-on:click="pagePrev()"> page {{page-1}} </button></td>
-                <td>{{page}}</td>
-                <td></td>
-                <td><button v-on:click="pageNext()"> page {{page+1}} </button></td>
+            <tfoot class="full-width">
+                <td class="collapsing">
+                    <div>
+                        <input type="range" min="0" max="35" v-model="nbPerPage" v-on:change="getRestaurantsFromServeur">
+                        </br>
+                        Résultats/pages : {{nbPerPage}}
+                    </div>
+                </td>
+                <td class="collapsing"><button class="ui small button" :disabled="page-1<0" v-on:click="pagePrev()">{{page}}
+                    </button></td>
+                <td class="collapsing"><b> Page n° : {{page+1}}</b></td>
+                <td class="collapsing"><button class="ui small button" v-on:click="pageNext()"> {{page+2}} </button></td>
             </tfoot>
         </table>
-        
-        
 
-        <span><input type="range" min="0" max="35" v-model="nbPerPage" v-on:change="getRestaurantsFromServeur">Pagination
-            {{nbPerPage}}</span>
+
+
+
         <hr>
         <form name="formulaireAjout">
             <h3>formulaireAjout</h3>
             Nom : <input type="text" v-model="name">
             Cuisine : <input type="text" v-model="cuisine">
-            <button v-on:click="ajouterRestaurant">Ajouter</button>
+            <button class="ui small button" v-on:click="ajouterRestaurant">Ajouter</button>
         </form>
         <hr>
         <div id="tohide" style="display:none;">
@@ -63,7 +72,7 @@
                 ID : <span name="idToModify">empty</span>
                 Nom : <input type="text" v-model="nametomodify">
                 Cuisine : <input type="text" v-model="cuisinetomodify">
-                <button v-on:click="modifyRestaurant">Ajouter</button>
+                <button class="ui small button" v-on:click="modifyRestaurant">Ajouter</button>
             </form>
         </div>
     </div>
