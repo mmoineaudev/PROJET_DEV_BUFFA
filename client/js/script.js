@@ -94,38 +94,6 @@ function init() {
 
 
             },
-            ajouterRestaurant(event) {
-                // Pour éviter que la page ne se ré-affiche
-                event.preventDefault();
-
-                let form = document.getElementsByName("formulaireAjout");
-
-                // Récupération des valeurs des champs du formulaire
-                // en prévision d'un envoi multipart en ajax/fetch
-                let donneesFormulaire = new FormData(form);
-                console.log(donneesFormulaire);
-
-
-
-                let url = "http://127.0.0.1:8080/api/restaurants";
-
-                fetch(url, {
-                    method: "POST",
-                    body: donneesFormulaire
-                })
-                    .then((responseJSON) => {
-                        responseJSON.json()
-                            .then((res) => {
-                                // Maintenant res est un vrai objet JavaScript
-                                //afficheReponsePOST(res);
-                                console.log(res);
-                                this.getRestaurantsFromServeur();
-                            });
-                    })
-                    .catch(function (err) {
-                        console.log(err);
-                    });
-            },
             getName(restaurants) {
                 return restaurants.name;
             },
@@ -152,29 +120,45 @@ function init() {
                 this.nametomodify = name;
                 this.cuisinetomodify = cuisine;
             },
+            ajouterRestaurant(event) {//why does this work and not put ?
+                // Pour éviter que la page ne se ré-affiche
+                event.preventDefault();
+                let form = document.getElementsByName("formulaireAjout")[0];
+                // Récupération des valeurs des champs du formulaire
+                // en prévision d'un envoi multipart en ajax/fetch
+                let donneesFormulaire = new FormData(form);
+                let url = "http://127.0.0.1:8080/api/restaurants";
+                fetch(url, {
+                    method: "POST",
+                    body: donneesFormulaire
+                })
+                    .then((responseJSON) => {
+                        responseJSON.json()
+                            .then((res) => {
+                                // Maintenant res est un vrai objet JavaScript
+                                //afficheReponsePOST(res);
+                                console.log(res);
+                                this.getRestaurantsFromServeur();
+                            });
+                    })
+                    .catch(function (err) {
+                        console.log(err);
+                    });
+            },
             modifyRestaurant() {
                 // Pour éviter que la page ne se ré-affiche
                 event.preventDefault();
                 console.log("modifyRestaurant" + this.indexToModify);
-                let id = this.getId(this.restaurants[this.indexToModify]);
-                let name = this.nametomodify;
-                let cuisine = this.cuisinetomodify;                // Pour éviter que la page ne se ré-affiche
-                document.getElementsByName("idToModify")[0].innerHTML = id;
+            
+               let form = document.getElementsByName("formulaireModif")[0];
+               let formData = new FormData(form);
 
-                /*
-                let form = document.getElementsByName("formulaireAjout");
-                let donneesFormulaire = new FormData(form);
-                */
+                console.log("modifyRestaurant [ \n_id " + this.restaurants[this.indexToModify]._id + " \nname " + this.nametomodify + " \n cuisine " + this.cuisinetomodify);
 
-                console.log("modifyRestaurant [ \n_id " + id + " \nname " + name + " \n cuisine " + cuisine);
-
-                let url = "http://127.0.0.1:8080/api/restaurants/" + id;
-                let formData = new FormData(document.getElementsByName("formulaireModif")[0]);//why not
+                let url = "http://127.0.0.1:8080/api/restaurants/" + this.restaurants[this.indexToModify]._id;
                 fetch(url, {
                     method: "PUT",
-                    body: {
-                       formData
-                    }
+                    body: formData
                 })
                     .then((responseJSON) => {
                         responseJSON.json()
