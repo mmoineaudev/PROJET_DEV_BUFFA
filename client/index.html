@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script src="lib/vue.min.js"></script>
+    <script src="lib/lodash.min.js"></script>
+    <script src="js/script.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+
+    <title>Gestionnaire restaurants VueJS</title>
+</head>
+
+<body>
+    <div id="app">
+
+        <h1>Les restaurants :</h1>
+        <hr>
+        Rechercher : <input type="text" v-model="name" v-on:keyup="getRestaurantsFromServeur">
+        <hr>        
+        <ul>
+            <li v-for="r,
+            index in restaurants">
+                {{r.name}} cuisine {{r.cuisine}}
+                <button v-on:click="supprimerRestaurant(index)">supprimer</button>
+                <button v-on:click="afficherModifierRestaurant(index)">modifier</button>
+            </li>
+        </ul>
+        <button v-on:click="pageNext()"> next </button>
+        <button v-on:click="pagePrev()"> previous </button>
+
+        <span><input type="range" min="0" max="35" v-model="nbPerPage" v-on:change="getRestaurantsFromServeur">Pagination
+            {{nbPerPage}}</span>
+        <hr>
+        <form name="formulaireAjout">
+            <h3>formulaireAjout</h3>
+            Nom : <input type="text" v-model="name">
+            Cuisine : <input type="text" v-model="cuisine">
+            <button v-on:click="ajouterRestaurant">Ajouter</button>
+        </form>
+        <hr>
+        <div id="tohide" style="display:none;">
+            <form name="formulaireModif" >
+                <h3>formulaireModif</h3>
+                ID : <span name="idToModify">empty</span>
+                Nom : <input type="text" v-model="nametomodify">
+                Cuisine : <input type="text" v-model="cuisinetomodify">
+                <button v-on:click="modifyRestaurant">Ajouter</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
