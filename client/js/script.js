@@ -57,6 +57,8 @@ function init() {
             },
             supprimerRestaurant(index) {
                 this.restaurants.splice(index, 1);
+                
+
             },
             ajouterRestaurant(event) {
                 // Pour éviter que la page ne se ré-affiche
@@ -94,23 +96,24 @@ function init() {
                 return restaurants.name;
             },
             getId(restaurants) {
-                console.log("getId(" + restaurants + ")");
+                console.log("getId(" + restaurants._id + ")");
                 return restaurants.restaurant_id;
             },
             afficherModifierRestaurant(index) {
                 console.log("afficherModifierRestaurant " + index);
-                this.fillDataToModify(index);
+                this.indexToModify = index;
+                this.fillDataToModify();
                 document.getElementById("tohide").setAttribute('style', 'display:block;');
             },
-            fillDataToModify(index) {
-                console.log("fillDataToModify " + index);
-                console.log(this.restaurants[index]);
-                var id = this.getId(this.restaurants[index]);
+            fillDataToModify() {
+                console.log("fillDataToModify " + this.indexToModify);
+                console.log(this.restaurants[this.indexToModify]);
+                var id = this.getId(this.restaurants[this.indexToModify]);
                 console.log("fillDataToModify" + id);
                 document.getElementsByName("idToModify")[0].innerHTML = id;
 
-                var name = this.restaurants[index].name;
-                var cuisine = this.restaurants[index].cuisine;
+                var name = this.restaurants[this.indexToModify].name;
+                var cuisine = this.restaurants[this.indexToModify].cuisine;
 
                 this.nametomodify = name;
                 this.cuisinetomodify = cuisine;
@@ -120,8 +123,8 @@ function init() {
                 event.preventDefault();
                 console.log("modifyRestaurant" + this.indexToModify);
                 let id = this.getId(this.restaurants[this.indexToModify]);
-                let name = this.restaurants[this.indexToModify].name;
-                let cuisine = this.restaurants[this.indexToModify].cuisine;                // Pour éviter que la page ne se ré-affiche
+                let name = this.nametomodify;
+                let cuisine = this.cuisinetomodify;                // Pour éviter que la page ne se ré-affiche
                 document.getElementsByName("idToModify")[0].innerHTML = id;
                 
                 /*
@@ -132,7 +135,7 @@ function init() {
                 console.log("modifyRestaurant [ \n_id " + id + " \nname " + name + " \n cuisine " + cuisine);
 
                 let url = "http://127.0.0.1:8080/api/restaurants/"+id;
-
+                
                 fetch(url, {
                     method: "PUT",
                     body: {
@@ -146,7 +149,7 @@ function init() {
                             .then((res) => {
                                 // Maintenant res est un vrai objet JavaScript
                                 //afficheReponsePOST(res);
-                                console.log(res);
+                                console.log("modifyRestaurant PUT response : "+res);
                                 this.getRestaurantsFromServeur();
                             });
                     })
