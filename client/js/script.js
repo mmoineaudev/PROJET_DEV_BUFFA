@@ -14,6 +14,7 @@ function init() {
                     cuisine: 'Américaine'
                 }
             ],
+            id: '',
             name: '',
             cuisine: '',
             modify: false,
@@ -55,9 +56,42 @@ function init() {
                 if (this.page < 0) this.page = 0;
                 this.getRestaurantsFromServeur();
             },
+
             supprimerRestaurant(index) {
-                this.restaurants.splice(index, 1);
-                
+                // Pour éviter que la page ne se ré-affiche
+                event.preventDefault();
+
+                let id = this.restaurants[this.indexToModify]._id;
+                let cuisine = this.restaurants[this.indexToModify].cuisine;
+                let name = this.restaurants[this.indexToModify].name;
+                console.log("supprimerRestaurant [ \n_id " + id + " \nname " + name + " \n cuisine " + cuisine);
+
+                let url = "http://127.0.0.1:8080/api/restaurants/" + id;
+
+                fetch(url, {
+                    method: "DELETE",
+                    /*body: {
+                        _id: id,
+                        name: name,
+                        cuisine: cuisine
+                    }*/
+                })
+                    .then((responseJSON) => {
+                        responseJSON.json()
+                            .then((res) => {
+                                // Maintenant res est un vrai objet JavaScript
+                                //afficheReponsePOST(res);
+                                console.log("supprimerRestaurant PUT response : " + res);
+                                this.getRestaurantsFromServeur();
+                                this.restaurants.splice(index, 1);//success
+
+                            });
+                    })
+                    .catch(function (err) {
+                        console.log(err);
+                    });
+
+
 
             },
             ajouterRestaurant(event) {
@@ -126,22 +160,22 @@ function init() {
                 let name = this.nametomodify;
                 let cuisine = this.cuisinetomodify;                // Pour éviter que la page ne se ré-affiche
                 document.getElementsByName("idToModify")[0].innerHTML = id;
-                
+
                 /*
                 let form = document.getElementsByName("formulaireAjout");
                 let donneesFormulaire = new FormData(form);
                 */
-                
+
                 console.log("modifyRestaurant [ \n_id " + id + " \nname " + name + " \n cuisine " + cuisine);
 
-                let url = "http://127.0.0.1:8080/api/restaurants/"+id;
-                
+                let url = "http://127.0.0.1:8080/api/restaurants/" + id;
+
                 fetch(url, {
                     method: "PUT",
                     body: {
-                        _id:id,
-                        name:name,
-                        cuisine:cuisine
+                        _id: id,
+                        name: name,
+                        cuisine: cuisine
                     }
                 })
                     .then((responseJSON) => {
@@ -149,7 +183,7 @@ function init() {
                             .then((res) => {
                                 // Maintenant res est un vrai objet JavaScript
                                 //afficheReponsePOST(res);
-                                console.log("modifyRestaurant PUT response : "+res);
+                                console.log("modifyRestaurant PUT response : " + res);
                                 this.getRestaurantsFromServeur();
                             });
                     })
@@ -157,8 +191,8 @@ function init() {
                         console.log(err);
                     });
             }
-        
-        
+
+
         }
     })
 }
